@@ -1,0 +1,18 @@
+name: 'Automatic Release'
+description: 'A GitHub Action for creating releases automatically'
+inputs:
+  repo-token:
+    description: 'GitHub token with repo scope'
+    required: true
+  tag-name:
+    description: 'Tag name for the release'
+    required: true
+  release-name:
+    description: 'Name of the release'
+    required: true
+  release-body:
+    description: 'Body content of the release'
+    required: false
+runs:
+  using: 'node12'
+  main: 'lib/index.js'
