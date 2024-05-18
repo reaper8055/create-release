@@ -14,5 +14,5 @@ inputs:
     description: 'Body content of the release'
     required: false
 runs:
-  using: 'node12'
+  using: 'node20'
   main: 'lib/index.js'
