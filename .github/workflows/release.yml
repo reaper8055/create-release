@@ -26,8 +26,9 @@ jobs:
 
     - name: Create Release
       uses: ./
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        repo-token: ${{ secrets.GITHUB_TOKEN }}
         tag-name: ${{ github.ref }}
         release-name: Release ${{ github.ref }}
         release-body: 'This is an automatically generated release.'
