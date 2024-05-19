@@ -24,9 +24,16 @@ jobs:
     - name: Compile TypeScript
       run: npx tsc
 
-    - name: Get Latest Tag
-      id: get_latest_tag
+    - name: Check and Get Latest Tag
+      id: check_and_get_latest_tag
       run: |
+        if git rev-parse "latest" >/dev/null 2>&1; then
+          echo "Latest tag exists."
+        else
+          git tag latest
+          git push origin latest
+          echo "Created latest tag."
+        fi
         latest_tag=$(git describe --tags `git rev-list --tags --max-count=1`)
         echo "latest_tag=$latest_tag" >> $GITHUB_ENV
 
@@ -34,28 +41,31 @@ jobs:
       id: increment_version
       run: |
         latest_tag=${{ env.latest_tag }}
-        if [ -z "$latest_tag" ]; then
+        if [ "$latest_tag" == "latest" ]; then
           new_version="0.1.0"
         else
           new_version=$(npx semver $latest_tag -i patch)
         fi
         echo "new_version=$new_version" >> $GITHUB_ENV
 
-    - name: Create Tag
-      id: create_tag
+    - name: Create New Version Tag
+      id: create_new_version_tag
       run: |
         new_version=${{ env.new_version }}
         git config user.name "github-actions[bot]"
         git config user.email "github-actions[bot]@users.noreply.github.com"
         git tag $new_version
+        git tag -d latest
+        git tag latest
         echo "new_version=$new_version" >> $GITHUB_ENV
 
-    - name: Push Tag
+    - name: Push Tags
       run: |
         new_version=${{ env.new_version }}
         git push origin $new_version
+        git push origin --force latest
       env:
-        GITHUB_TOKEN: ${{ secrets.PAT }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Create Release
       uses: ./
