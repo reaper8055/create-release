@@ -27,7 +27,7 @@ jobs:
     - name: Create Release
       uses: ./
       with:
-        repo-token: ${{ secrets.GITHUB_TOKEN }}
+        repo-token: ${{ secrets.PAT }}
         tag-name: ${{ github.ref }}
         release-name: Release ${{ github.ref }}
         release-body: 'This is an automatically generated release.'
