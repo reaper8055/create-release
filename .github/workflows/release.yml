@@ -65,12 +65,12 @@ jobs:
         git push origin $new_version
         git push origin --force latest
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.PAT }}
 
     - name: Create Release
       uses: ./
       with:
         repo-token: ${{ secrets.PAT }}
-        tag-name: ${{ github.ref }}
-        release-name: Release ${{ github.ref }}
+        tag-name: ${{ env.new_version }}
+        release-name: Release ${{ env.new_version }}
         release-body: 'This is an automatically generated release.'
