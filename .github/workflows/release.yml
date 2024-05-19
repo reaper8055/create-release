@@ -1,0 +1,33 @@
+name: Create Release
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '20'
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Compile TypeScript
+      run: npx tsc
+
+    - name: Create Release
+      uses: ./
+      with:
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
+        tag-name: ${{ github.ref }}
+        release-name: Release ${{ github.ref }}
+        release-body: 'This is an automatically generated release.'
